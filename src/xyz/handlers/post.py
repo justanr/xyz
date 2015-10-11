@@ -66,3 +66,18 @@ class PostEditor:
             post.edit_text(text)
 
         self._posts.persist(post)
+
+    def schedule_post(self, post_id, when, clock=datetime):
+        post = self._posts.find_by_id(post_id)
+        post.schedule(when, clock)
+        self._posts.persist(post)
+
+    def revert_to_draft(self, post_id):
+        post = self._posts.find_by_id(post_id)
+        post.revert_to_draft()
+        self._posts.persist(post)
+
+    def publish_post(self, post_id, clock=datetime):
+        post = self._posts.find_by_id(post_id)
+        post.publish(clock=clock)
+        self._posts.persist(post)

@@ -1,4 +1,4 @@
-from xyz.entities.post import Post
+from xyz.entities.post import Post, PostStatus
 from xyz.handlers.post import PostMaker, PostEditor
 from xyz.repositories import PostRepositoryABC
 
@@ -66,3 +66,21 @@ class TestPostEditor:
         self.editor.edit(post_id=1, text='Grape is gross')
 
         assert self.dummy_post.text == 'Grape is gross'
+
+    def test_set_post_for_scheduled(self, clock):
+        self.editor.schedule_post(post_id=1, when=datetime(2015, 10, 15))
+
+        assert self.dummy_post.status == PostStatus.scheduled
+        assert self.dummy_post.published_at == datetime(2015, 10, 15)
+
+    def test_revert_post_to_draft(self):
+        self.dummy_post.publish()
+        self.editor.revert_to_draft(post_id=1)
+
+        assert self.dummy_post.status == PostStatus.draft
+
+    def test_publish_post(self, clock):
+        self.editor.publish_post(post_id=1, clock=clock)
+
+        assert self.dummy_post.status == PostStatus.published
+        assert self.dummy_post.published_at == clock.now()
