@@ -53,3 +53,13 @@ class TestPost:
     def test_cant_retroactively_schedule_post(self, clock):
         with pytest.raises(PostError):
             self.post.schedule(when=datetime(2015, 10, 10), clock=clock)
+
+    def test_edit_post_title(self):
+        self.post.edit_title(title='Cthocolate')
+
+        assert self.post.title == 'Cthocolate'
+
+    def test_edit_post_text(self):
+        self.post.edit_text(text='Grape is gross')
+
+        assert self.post.text == 'Grape is gross'

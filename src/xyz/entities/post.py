@@ -53,3 +53,9 @@ class Post(object):
 
         self.status = PostStatus.scheduled
         self.published_at = when
+
+    def edit_title(self, title):
+        self.title = title
+
+    def edit_text(self, text):
+        self.text = text
