@@ -2,14 +2,6 @@ from xyz.entities.post import Post, PostStatus
 from xyz.exceptions import PostError
 from datetime import datetime
 import pytest
-from unittest import mock
-
-
-@pytest.fixture
-def clock():
-    clock = mock.create_autospec(datetime)
-    clock.now.return_value = datetime(2015, 10, 11)
-    return clock
 
 
 class TestPost:
@@ -57,7 +49,6 @@ class TestPost:
 
         assert self.post.status == PostStatus.scheduled
         assert self.post.published_at == datetime(2015, 10, 12)
-
 
     def test_cant_retroactively_schedule_post(self, clock):
         with pytest.raises(PostError):
