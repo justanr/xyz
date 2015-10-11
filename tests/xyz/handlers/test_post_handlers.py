@@ -1,14 +1,22 @@
 from xyz.entities.post import Post
 from xyz.handlers.post import PostMaker, PostEditor
 from xyz.repositories import PostRepositoryABC
+
 from datetime import datetime
 from unittest import mock
+import pytest
 
 
+@pytest.fixture
+def maker(request, clock):
+    request.cls.clock = clock
+
+
+@pytest.mark.usefixtures('maker')
 class TestPostMaker:
     def setup(self):
         self.posts = mock.create_autospec(PostRepositoryABC)
-        self.maker = PostMaker(posts=self.posts)
+        self.maker = PostMaker(posts=self.posts, clock=self.clock)
 
     def test_create_new_draft_post_persists(self):
         self.maker.create_draft(title='Fhtagn Daaz', author=object(),
@@ -18,16 +26,14 @@ class TestPostMaker:
 
     def test_create_published_post_persists(self, clock):
         self.maker.create_published(title='Fhtagn Daaz', author=object(),
-                                    text='Introducing Grape Old Ones',
-                                    clock=clock)
+                                    text='Introducing Grape Old Ones')
 
         self.posts.persist.call_count == 1
 
     def test_create_scheduled_post_persists(self, clock):
         self.maker.schedule_post(title='Fhtagn Daaz', author=object(),
                                  text='Introducing Grape Old Ones',
-                                 when=datetime(2015, 10, 12),
-                                 clock=clock)
+                                 when=datetime(2015, 10, 12))
 
         assert self.posts.persist.call_count == 1
 

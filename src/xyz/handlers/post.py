@@ -11,28 +11,30 @@ from datetime import datetime
 
 class PostMaker:
     "Handles orchestrations of all actions needed to create a new post"
-    def __init__(self, posts):
+    def __init__(self, posts, clock=datetime):
         self._posts = posts
+        self._clock = clock
 
-    def create_draft(self, title, text, author, categories=None, clock=datetime):
-        post = self._create_post(author, title, text, clock=clock.now(), categories=categories)
+    def create_draft(self, title, text, author, categories=None):
+        post = self._create_post(author, title, text, categories=categories)
 
         self._posts.persist(post)
 
-    def create_published(self, title, text, author, categories=None, clock=datetime):
-        post = self._create_post(author, title, text, clock=clock.now(), categories=categories)
+    def create_published(self, title, text, author, categories=None):
+        post = self._create_post(author, title, text, categories=categories)
         post.publish()
 
         self._posts.persist(post)
 
-    def schedule_post(self, title, text, author, when, categories=None, clock=datetime):
-        post = self._create_post(title, text, author, categories, clock)
-        post.schedule(when, clock)
+    def schedule_post(self, title, text, author, when, categories=None):
+        post = self._create_post(title, text, author, categories)
+        post.schedule(when, self._clock)
 
         self._posts.persist(post)
 
-    def _create_post(self, title, text, author, categories, clock):
-        return Post(author, title, text, categories=categories, created_at=clock.now())
+    def _create_post(self, title, text, author, categories):
+        return Post(author, title, text, categories=categories,
+                    created_at=self._clock.now())
 
 
 class PostEditor:
