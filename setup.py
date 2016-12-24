@@ -37,8 +37,11 @@ if __name__ == '__main__':
         license='MIT',
         packages=find_packages('src'),
         package_dir={'': 'src'},
+        install_requires=[
+            'pytz==2016.10'
+        ],
         zip_safe=False,
-        url='https://github.com/justanr/xyzblog',
+        url='https://github.com/justanr/xyz',
         classifiers=['NOPE'],
         test_suite='tests',
         tests_require=['tox'],

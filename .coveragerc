@@ -1,11 +1,31 @@
+[run]
+branch = true
+source = xyz
+omit =
+        __meta__.py
+parallel = true
+
+[paths]
+source =
+   src/xyz/
+   .tox/*/lib/*/site-packages/xyz/
+
 [report]
 exclude_lines =
     pragma: no cover
     def __repr__
-    if self.debug:
+    if self\.debug:
     if settings.DEBUG
-    raise AssertionError
     raise NotImplementedError
     if 0:
+    if False:
     if __name__ == .__main__.:
     @abstractmethod
+
+fail_under = 80
+precision = 2
+show_missing = true
+skip_covered = true
+
+[html]
+directory = tests/htmlcov
